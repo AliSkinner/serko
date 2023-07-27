@@ -34,7 +34,7 @@
     "jest": "^29.6.1",
     "jest-environment-jsdom": "^29.6.1",
     "next-router-mock": "^0.9.7",
-    "prettier": "^3.0.0",
+    "prettier": "^2.8.8",
     "typescript": "latest"
   }
 }
