@@ -43,17 +43,24 @@ interface TVResult {
   vote_count: number;
 }
 
-interface SearchMultiData {
+export type SearchMultiResult = Array<MovieResult | PersonResult | TVResult>;
+
+export interface SearchMultiData {
   page: number;
   total_pages: number;
   total_results: number;
-  results: Array<MovieResult | PersonResult | TVResult>;
+  results: SearchMultiResult;
 }
 
-export const searchMulti = async (
-  query: string,
-  page: string = "1"
-): Promise<SearchMultiData> => {
+interface SearchParams {
+  query: string;
+  page: string;
+}
+
+export const fetchSearchMulti = async ({
+  query,
+  page = "1",
+}: SearchParams): Promise<SearchMultiData> => {
   const url = `https://api.themoviedb.org/3/search/multi?query=${query}&page=${page}&include_adult=false`;
   const options = {
     method: "GET",
@@ -71,7 +78,7 @@ export const searchMulti = async (
   return response.json() as Promise<SearchMultiData>;
 };
 
-interface Genre {
+export interface Genre {
   id: number;
   name: string;
 }
@@ -80,8 +87,12 @@ interface GenresData {
   genres: Array<Genre>;
 }
 
-export const movieGenres = async (): Promise<GenresData> => {
-  const url = "https://api.themoviedb.org/3/genre/movie/list";
+export const fetchGenres = async ({
+  media,
+}: {
+  media: "movie" | "tv";
+}): Promise<GenresData> => {
+  const url = `https://api.themoviedb.org/3/genre/${media}/list`;
   const options = {
     method: "GET",
     headers: {
@@ -92,26 +103,16 @@ export const movieGenres = async (): Promise<GenresData> => {
   const response = await fetch(url, options);
 
   if (!response.ok) {
-    throw new Error("Failed to fetch data");
+    throw new Error(`Failed to fetch ${media} genre data`);
   }
 
   return response.json() as Promise<GenresData>;
 };
 
-export const tvGenres = async (): Promise<GenresData> => {
-  const url = "https://api.themoviedb.org/3/genre/tv/list";
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_AUTH}`,
-    },
-  };
-  const response = await fetch(url, options);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return response.json() as Promise<GenresData>;
+export const fetchSearchResults = async (searchParams: SearchParams) => {
+  return await Promise.all([
+    fetchSearchMulti(searchParams),
+    fetchGenres({ media: "movie" }),
+    fetchGenres({ media: "tv" }),
+  ]);
 };

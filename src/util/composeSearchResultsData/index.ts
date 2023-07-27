@@ -1,0 +1,1 @@
+export {composeSearchResultsData} from "./composeSearchResultsData"

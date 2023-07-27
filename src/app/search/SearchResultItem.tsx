@@ -1,8 +1,6 @@
-import { movieGenres } from "@/clients/tmdb";
 import {
   Box,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Chip,
@@ -12,47 +10,36 @@ import {
   Typography,
 } from "@mui/material";
 
-export const SearchResultItem = async ({
-  title = "",
-  overview = "",
-  media_type,
-  release_date,
-  vote_average,
-  genre_ids,
-}: {
-  backdrop_path: string;
-  id: number;
-  title: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  poster_path: string;
-  media_type: string;
-  genre_ids: Array<number>;
-  popularity: number;
-  release_date: string;
-  vote_average: number;
-  vote_count: number;
-}) => {
-  if (media_type !== "movie") {
-    return <Typography>Search result is not a movie</Typography>;
-  }
+export type AccentColor = "primary" | "secondary" | "success";
 
-  const { genres } = await movieGenres();
+export interface Props {
+  accentColor: AccentColor;
+  header: string;
+  subHeader: string;
+  body: string;
+  chipLabel: string;
+  ratingLabel: string;
+  ratingIndicatorValue: number;
+  tags: string[];
+}
 
-  const genreNames = genre_ids.map((genreId) => {
-    const { name } =
-      genres.find((currentGenre) => currentGenre.id === genreId) ?? {};
-    return name;
-  });
-
+export const SearchResultItem = ({
+  accentColor,
+  header,
+  subHeader,
+  body,
+  chipLabel,
+  ratingLabel,
+  ratingIndicatorValue,
+  tags,
+}: Props) => {
   return (
     <Card variant="outlined" sx={{ borderRadius: 2 }}>
       <CardHeader
-        title={<Typography variant="h5">{title}</Typography>}
+        title={<Typography variant="h5">{header}</Typography>}
         subheader={
           <Typography variant="body2" color="text.secondary">
-            {new Date(release_date).toLocaleDateString()}
+            {subHeader}
           </Typography>
         }
         sx={{
@@ -62,8 +49,8 @@ export const SearchResultItem = async ({
           <Box sx={{ position: "relative", display: "inline-flex" }}>
             <CircularProgress
               variant="determinate"
-              value={vote_average * 10}
-              color="primary"
+              value={ratingIndicatorValue}
+              color={accentColor}
               thickness={4}
             />
             <Box
@@ -79,29 +66,30 @@ export const SearchResultItem = async ({
               }}
             >
               <Typography variant="caption" fontWeight={600} component="div">
-                {vote_average.toFixed(1)}
+                {ratingLabel}
               </Typography>
             </Box>
           </Box>
         }
       />
-      <CardContent>{overview}</CardContent>
+      <CardContent>{body}</CardContent>
       <CardContent>
         <Stack direction="row" justifyContent="space-between">
-          <Chip label="Movie" variant="outlined" color="primary" />
+          <Chip label={chipLabel} variant="outlined" color={accentColor} />
           <Stack
             divider={<Divider orientation="vertical" />}
             direction="row"
             spacing={1}
             alignItems="center"
           >
-            {genreNames.map((genreName) => (
+            {tags.map((tag) => (
               <Typography
+                key={tag}
                 variant="body2"
                 component="div"
                 color="text.secondary"
               >
-                {genreName}
+                {tag}
               </Typography>
             ))}
           </Stack>
