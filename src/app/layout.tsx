@@ -8,7 +8,6 @@ import MuiLink from "@mui/material/Link";
 import LocalMovies from "@mui/icons-material/LocalMovies";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import Link from "next/link";
-import { grey } from "@mui/material/colors";
 
 export const metadata = {
   title: "Dionysus",
