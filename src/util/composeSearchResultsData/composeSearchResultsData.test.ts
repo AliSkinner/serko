@@ -1,3 +1,160 @@
-describe("", () => {
-  test("", () => {});
+import { SearchMultiResult } from "@/clients/tmdb";
+import { composeSearchResultsData } from "./composeSearchResultsData";
+
+describe("composeSearchResultsData", () => {
+  const results = [
+    {
+      id: 500,
+      name: "Tom Cruise",
+      original_name: "Tom Cruise",
+      media_type: "person",
+      popularity: 58.689,
+      gender: 2,
+      known_for_department: "Acting",
+      profile_path: "/8qBylBsQf4llkGrWR3qAsOtOU8O.jpg",
+      known_for: [
+        { title: "Edge of Tomorrow" },
+        { title: "Oblivion" },
+        { title: "Mission: Impossible - Ghost Protocol" },
+      ],
+    },
+    {
+      id: 1126800,
+      title: "Cruise",
+      original_language: "en",
+      original_title: "Cruise",
+      overview:
+        "After experiencing head trauma, a young man decides to take a trip down the Florida Georgia Line.",
+      poster_path: "/mEsr8TMs9ng1vePTjsqkIaAJGH4.jpg",
+      media_type: "movie",
+      genre_ids: [35, 12],
+      popularity: 0.6,
+      release_date: "2023-05-10",
+      vote_average: 0,
+      vote_count: 0,
+    },
+    {
+      id: 99406,
+      name: "Train Cruise",
+      original_language: "en",
+      original_name: "Train Cruise",
+      overview:
+        "Criss-cross Japan by rail. Enjoy an amazing diversity of nature and scenery across the four seasons, exploring both well-known and hidden Japan.",
+      poster_path: "/1YizXrF366E8qaMn1JcMr79EZCm.jpg",
+      media_type: "tv",
+      genre_ids: [99, 10764],
+      popularity: 2.411,
+      first_air_date: "2013-05-25",
+      vote_average: 0,
+      vote_count: 0,
+      origin_country: ["JP"],
+    },
+    {
+      adult: false,
+      backdrop_path: "/UNHANDLED_MEDIA_TYPE.jpg",
+      id: 10000,
+      name: "UNHANDLED_MEDIA_TYPE",
+      original_language: "en",
+      original_name: "Cruise - UNHANDLED_MEDIA_TYPE",
+      overview: "UNHANDLED_MEDIA_TYPE",
+      poster_path: "/UNHANDLED_MEDIA_TYPE.jpg",
+      media_type: "UNHANDLED_MEDIA_TYPE",
+      genre_ids: [99],
+      popularity: 2.411,
+      first_air_date: "2013-05-25",
+      vote_average: 0,
+      vote_count: 0,
+      origin_country: ["JP"],
+    },
+  ];
+  const tvGenres = [
+    { id: 10759, name: "Action & Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 10762, name: "Kids" },
+    { id: 9648, name: "Mystery" },
+    { id: 10763, name: "News" },
+    { id: 10764, name: "Reality" },
+    { id: 10765, name: "Sci-Fi & Fantasy" },
+    { id: 10766, name: "Soap" },
+    { id: 10767, name: "Talk" },
+    { id: 10768, name: "War & Politics" },
+    { id: 37, name: "Western" },
+  ];
+  const movieGenres = [
+    { id: 28, name: "Action" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 14, name: "Fantasy" },
+    { id: 36, name: "History" },
+    { id: 27, name: "Horror" },
+    { id: 10402, name: "Music" },
+    { id: 9648, name: "Mystery" },
+    { id: 10749, name: "Romance" },
+    { id: 878, name: "Science Fiction" },
+    { id: 10770, name: "TV Movie" },
+    { id: 53, name: "Thriller" },
+    { id: 10752, name: "War" },
+    { id: 37, name: "Western" },
+  ];
+  test("data is formatted correctly", () => {
+    expect(
+      composeSearchResultsData({
+        results: results as SearchMultiResult,
+        tvGenres,
+        movieGenres,
+      }),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "accentColor": "success",
+          "body": "Edge of Tomorrow, Oblivion, Mission: Impossible - Ghost Protocol",
+          "chipLabel": "People",
+          "header": "Tom Cruise",
+          "id": 500,
+          "ratingIndicatorValue": 11.7378,
+          "ratingLabel": "59",
+          "subHeader": "Acting",
+          "tags": [],
+        },
+        {
+          "accentColor": "primary",
+          "body": "After experiencing head trauma, a young man decides to take a trip down the Florida Georgia Line.",
+          "chipLabel": "Movie",
+          "header": "Cruise",
+          "id": 1126800,
+          "ratingIndicatorValue": 0,
+          "ratingLabel": "0.0",
+          "subHeader": "10/05/2023",
+          "tags": [
+            "Comedy",
+            "Adventure",
+          ],
+        },
+        {
+          "accentColor": "secondary",
+          "body": "Criss-cross Japan by rail. Enjoy an amazing diversity of nature and scenery across the four seasons, exploring both well-known and hidden Japan.",
+          "chipLabel": "TV Show",
+          "header": "Train Cruise",
+          "id": 99406,
+          "ratingIndicatorValue": 0,
+          "ratingLabel": "0.0",
+          "subHeader": "25/05/2013",
+          "tags": [
+            "Documentary",
+            "Reality",
+          ],
+        },
+      ]
+    `);
+  });
 });

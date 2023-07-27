@@ -1,4 +1,4 @@
-interface MovieResult {
+export interface MovieResult {
   media_type: "movie";
   backdrop_path: string;
   id: number;
